@@ -1,13 +1,13 @@
 package guru.springframework.domain;
 
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Set;
 
 @Data
+@NoArgsConstructor
 public class RecipeDTO {
     private String description;
     private Integer prepTime;

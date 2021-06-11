@@ -4,15 +4,15 @@ import guru.springframework.domain.*;
 import guru.springframework.repository.CategoryRepository;
 import guru.springframework.repository.RecipeRepository;
 import guru.springframework.repository.UnitOfMeasureRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 
 @Component
+@Slf4j
 public class Bootstrap implements CommandLineRunner {
 
     private static final String AMERICAN = "American";
@@ -30,7 +30,7 @@ public class Bootstrap implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
 
-        System.out.println("Add Spicy Grilled Chicken Tacos ");
+        log.debug("Add Spicy Grilled Chicken Tacos ");
         Category c1 = categoryRepository.findCategoryByDescription(AMERICAN).get();
 
 
@@ -88,7 +88,7 @@ public class Bootstrap implements CommandLineRunner {
 
         recipeRepository.save(r1);
 
-        System.out.println("Saved Recipe One ");
+        log.debug("Saved Recipe One ");
 
 
 
