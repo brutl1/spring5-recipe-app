@@ -1,5 +1,6 @@
 package guru.springframework.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String description;
+    @JsonIgnore
     @ManyToMany(mappedBy = "categories")
     private Set<Recipe> recipes;
 

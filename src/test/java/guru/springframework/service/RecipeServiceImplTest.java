@@ -1,53 +1,81 @@
 package guru.springframework.service;
 
+
+
+import guru.springframework.converter.RecipeCommandToRecipe;
+import guru.springframework.converter.RecipeToRecipeCommand;
 import guru.springframework.domain.Recipe;
-import guru.springframework.domain.RecipeDTO;
 import guru.springframework.mapper.RecipeMapper;
 import guru.springframework.repository.RecipeRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.*;
 
-class RecipeServiceImplTest {
+/**
+ * Created by jt on 6/17/17.
+ */
+public class RecipeServiceImplTest {
 
     RecipeServiceImpl recipeService;
+
     @Mock
     RecipeRepository recipeRepository;
 
     @Mock
+    RecipeToRecipeCommand recipeToRecipeCommand;
+
+    @Mock
+    RecipeCommandToRecipe recipeCommandToRecipe;
+
+    @Mock
     RecipeMapper recipeMapper;
 
-    @BeforeEach
-    void setUp() {
+    @Before
+    public void setUp() throws Exception {
         MockitoAnnotations.openMocks(this);
-        recipeService = new RecipeServiceImpl(recipeRepository, recipeMapper);
 
+        recipeService = new RecipeServiceImpl(recipeRepository, recipeMapper, recipeCommandToRecipe, recipeToRecipeCommand);
     }
 
     @Test
-    void getAllRecipes() {
+    public void getRecipeByIdTest() throws Exception {
         Recipe recipe = new Recipe();
-        RecipeDTO recipeDTO = new RecipeDTO();
-        List<Recipe> recipesList = new ArrayList<>();
-        recipesList.add(recipe);
+        recipe.setId(1L);
+        Optional<Recipe> recipeOptional = Optional.of(recipe);
 
+        when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
 
-        when(recipeMapper.recipeToRecipeDTO(recipe)).thenReturn(recipeDTO);
-        when(recipeRepository.findAll()).thenReturn(recipesList);
+        Recipe recipeReturned = recipeService.findById(1L);
 
-        List<RecipeDTO> recipes = recipeService.getAllRecipes();
-
-
-
-        assertEquals(recipesList.size(), recipes.size());
-        verify(recipeRepository, times(1)).findAll();
+        assertNotNull("Null recipe returned", recipeReturned);
+        verify(recipeRepository, times(1)).findById(anyLong());
+        verify(recipeRepository, never()).findAll();
     }
+
+    @Test
+    public void getRecipesTest() throws Exception {
+
+        Recipe recipe = new Recipe();
+        HashSet receipesData = new HashSet();
+        receipesData.add(recipe);
+
+        when(recipeService.getRecipes()).thenReturn(receipesData);
+
+        Set<Recipe> recipes = recipeService.getRecipes();
+
+        assertEquals(recipes.size(), 1);
+        verify(recipeRepository, times(1)).findAll();
+        verify(recipeRepository, never()).findById(anyLong());
+    }
+
 }

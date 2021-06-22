@@ -1,5 +1,6 @@
 package guru.springframework.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -19,6 +20,7 @@ public class Ingredient {
     @OneToOne
     private UnitOfMeasure unitOfMeasure;
 
+    @JsonIgnore
     @ManyToOne
     private Recipe recipe;
 }
